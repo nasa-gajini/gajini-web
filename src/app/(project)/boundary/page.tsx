@@ -9,6 +9,8 @@ import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 
+import useRectangleInfo from "@/hooks/useRectangleInfo";
+
 import { Route } from "@/constants/route";
 
 import { Typography } from "@mui/material";
@@ -20,7 +22,9 @@ const BoundaryPage = () => {
   const router = useRouter();
 
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
-  const [rectangleLayer, setRectangleLayer] = useState<L.Layer>();
+  const [rectangleLayer, setRectangleLayer] = useState<L.Layer | null>(null);
+
+  const { setRectangleInfo } = useRectangleInfo();
 
   const mapRef = useRef<LeafletMap>(null);
 
@@ -36,7 +40,12 @@ const BoundaryPage = () => {
   };
 
   const clickNext = () => {
+    if (!rectangleLayer) {
+      return;
+    }
+
     router.push(Route.Status);
+    setRectangleInfo({ rectangleLayer, zoom: mapRef.current!.getZoom() });
   };
 
   if (!egyptBorder) {
@@ -67,7 +76,7 @@ const BoundaryPage = () => {
   };
 
   const handleDrawDeleted = () => {
-    setRectangleLayer(undefined);
+    setRectangleLayer(null);
   };
 
   return (
