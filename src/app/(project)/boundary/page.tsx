@@ -10,6 +10,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 
 import { Route } from "@/constants/route";
+import { StorageKey } from "@/constants/key";
 
 import { Typography } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
@@ -37,7 +38,10 @@ const BoundaryPage = () => {
 
   const clickNext = () => {
     router.push(Route.Status);
-    localStorage.setItem("rectangleLayer", JSON.stringify(rectangleLayer)); // local storage에 설정한 농지 영역 저장
+    localStorage.setItem(
+      StorageKey.RectangleLayer,
+      JSON.stringify(rectangleLayer),
+    ); // local storage에 설정한 농지 영역 저장
   };
 
   if (!egyptBorder) {
