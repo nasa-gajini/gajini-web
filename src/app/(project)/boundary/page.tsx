@@ -30,28 +30,35 @@ export default function BoundaryPage() {
       .catch((error) => console.error("Error loading GeoJSON:", error));
   }, []);
 
-  // GeoJSON 경계를 LatLngBounds로 변환
-  const getBoundsFromGeoJSON = (geojson: GeoJSON.FeatureCollection) => {
-    const layer = L.geoJSON(geojson);
-    return layer.getBounds();
-  };
-
-  const handleDrawCreated = (e: any): void => {
-    const layer = e.layer as L.Rectangle;
-    const bounds = egyptBorder ? getBoundsFromGeoJSON(egyptBorder) : null;
-
-    if (bounds && !bounds.contains(layer.getBounds())) {
-      mapRef.current?.removeLayer(layer);
-      alert("경계 안에서만 도형을 그릴 수 있습니다.");
-    }
-  };
-
   const clickPrev = () => {
     router.push(Route.Home);
   };
 
   const clickNext = () => {
     router.push(Route.Status);
+  };
+
+  if (!egyptBorder) {
+    return null;
+  }
+
+  // GeoJSON 경계를 LatLngBounds로 변환
+  const getBoundsFromGeoJSON = (geojson: GeoJSON.FeatureCollection) => {
+    const layer = L.geoJSON(geojson);
+
+    return layer.getBounds();
+  };
+
+  const handleDrawCreated = (e): void => {
+    const layer = e.layer;
+    const bounds = egyptBorder ? getBoundsFromGeoJSON(egyptBorder) : null;
+
+    console.log("egyptBorder", egyptBorder, "bounds", bounds);
+
+    if (bounds && !bounds.contains(layer.getBounds())) {
+      mapRef.current?.removeLayer(layer);
+      alert("경계 안에서만 도형을 그릴 수 있습니다.");
+    }
   };
 
   return (
@@ -75,12 +82,10 @@ export default function BoundaryPage() {
           url="https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png"
         />
 
-        {egyptBorder && (
-          <GeoJSON
-            data={egyptBorder}
-            style={{ color: "black", weight: 2, fillOpacity: 0 }}
-          />
-        )}
+        <GeoJSON
+          data={egyptBorder}
+          style={{ color: "black", weight: 2, fillOpacity: 0 }}
+        />
 
         <FeatureGroup>
           <EditControl
