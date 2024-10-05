@@ -22,7 +22,7 @@ const BoundaryPage = () => {
   const router = useRouter();
 
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
-  const [rectangleLayer, setRectangleLayer] = useState<L.Layer | null>(null);
+  const [rectangleLayer, setRectangleLayer] = useState<L.Rectangle | null>(null);
 
   const { setRectangleInfo } = useRectangleInfo();
 

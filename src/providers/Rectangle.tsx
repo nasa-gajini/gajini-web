@@ -1,8 +1,9 @@
 import { createContext, useState, ReactNode } from "react";
+
 import L from "leaflet";
 
 interface RectangleInfoType {
-  rectangleLayer: L.Layer;
+  rectangleLayer: L.Rectangle;
   zoom: number;
 }
 
