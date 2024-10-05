@@ -20,8 +20,10 @@ export default function BoundaryPage() {
   const router = useRouter();
 
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
+  const [rectangleLayer, setRectangleLayer] = useState<L.Layer>();
 
   const mapRef = useRef<LeafletMap>(null);
+  const rectangleLayerRef = useRef<L.Layer>();
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -49,16 +51,24 @@ export default function BoundaryPage() {
     return layer.getBounds();
   };
 
-  const handleDrawCreated = (e): void => {
+  const handleDrawCreated = (e: any): void => {
     const layer = e.layer;
     const bounds = egyptBorder ? getBoundsFromGeoJSON(egyptBorder) : null;
-
-    console.log("egyptBorder", egyptBorder, "bounds", bounds);
 
     if (bounds && !bounds.contains(layer.getBounds())) {
       mapRef.current?.removeLayer(layer);
       alert("경계 안에서만 도형을 그릴 수 있습니다.");
+      return;
     }
+
+    // 이전에 그린 사각형이 있으면 삭제
+    if (rectangleLayerRef.current) {
+      mapRef.current?.removeLayer(rectangleLayerRef.current);
+    }
+
+    // 새 사각형을 지도에 추가하고 Ref 업데이트
+    rectangleLayerRef.current = layer;
+    mapRef.current?.addLayer(layer);
   };
 
   return (
