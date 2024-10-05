@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 import L, { LatLngBounds, Map as LeafletMap } from "leaflet";
 import { MapContainer, FeatureGroup, TileLayer, GeoJSON } from "react-leaflet";
@@ -8,9 +9,15 @@ import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 
+import { Typography, Box } from "@mui/material";
+
+import ArrowButtons from "@/components/ArrowButtons";
+
 const egyptBounds = new LatLngBounds([22.0, 25.0], [31.7, 35.0]);
 
-export default function Home() {
+export default function BoundaryPage() {
+  const router = useRouter();
+
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
 
   const mapRef = useRef<LeafletMap>(null);
@@ -38,8 +45,12 @@ export default function Home() {
     }
   };
 
+  const clickNext = () => router.push("/status");
+
   return (
     <>
+      <Typography component="span">Step 1. 농지 영역을 선택해주세요</Typography>
+
       <MapContainer
         ref={mapRef}
         center={[26.8206, 30.8025]} // 이집트의 중앙 좌표
@@ -48,7 +59,7 @@ export default function Home() {
         maxZoom={16}
         maxBounds={egyptBounds}
         maxBoundsViscosity={1.0}
-        style={{ height: "80vh" }}
+        style={{ width: "100%", height: "100%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -77,6 +88,11 @@ export default function Home() {
           />
         </FeatureGroup>
       </MapContainer>
+
+      <ArrowButtons
+        prevButtonProps={{ disabled: true }}
+        nextButtonProps={{ onClick: clickNext }}
+      />
     </>
   );
 }

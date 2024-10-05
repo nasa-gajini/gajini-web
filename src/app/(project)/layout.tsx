@@ -2,10 +2,14 @@
 
 import { PropsWithChildren } from "react";
 
-import HorizontalLinearStepper from "@/components/Stepper";
+import { Box } from "@mui/material";
 
 const ProjectLayout = ({ children }: PropsWithChildren) => {
-  return <HorizontalLinearStepper>{children}</HorizontalLinearStepper>;
+  return (
+    <Box width="100%" height="100vh">
+      {children}
+    </Box>
+  );
 };
 
 export default ProjectLayout;

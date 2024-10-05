@@ -1,4 +1,4 @@
-import { Select, MenuItem, Button, Stack } from "@mui/material";
+import { Select, MenuItem, Stack } from "@mui/material";
 
 const CropPage = () => {
   return (
