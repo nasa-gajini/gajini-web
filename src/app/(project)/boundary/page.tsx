@@ -9,7 +9,7 @@ import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 
-import { Typography, Box } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import ArrowButtons from "@/components/ArrowButtons";
 
@@ -45,11 +45,15 @@ export default function BoundaryPage() {
     }
   };
 
-  const clickNext = () => router.push("/status");
+  const clickNext = () => {
+    router.push("/status");
+  };
 
   return (
     <>
-      <Typography component="span">Step 1. 농지 영역을 선택해주세요</Typography>
+      <Typography variant="subtitle1" textAlign="center" p={1}>
+        Step 1. 농지 영역을 선택해주세요
+      </Typography>
 
       <MapContainer
         ref={mapRef}

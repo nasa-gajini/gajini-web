@@ -1,8 +1,26 @@
-import { Select, MenuItem, Stack } from "@mui/material";
+"use client";
+
+import { useRouter } from "next/navigation";
+
+import { Select, MenuItem, Typography } from "@mui/material";
+
+import ArrowButtons from "@/components/ArrowButtons";
 
 const CropPage = () => {
+  const router = useRouter();
+
+  const clickPrev = () => {
+    router.push("/status");
+  };
+
+  const clickNext = () => {};
+
   return (
-    <Stack p={8} px={24} gap={2}>
+    <>
+      <Typography variant="subtitle1" textAlign="center" p={1}>
+        Step 3. 어떤 작물을 심으셨나요?
+      </Typography>
+
       <Select>
         {[
           { value: "옥수수", label: "옥수수" },
@@ -18,7 +36,12 @@ const CropPage = () => {
           </MenuItem>
         ))}
       </Select>
-    </Stack>
+
+      <ArrowButtons
+        prevButtonProps={{ onClick: clickPrev }}
+        nextButtonProps={{ onClick: clickNext }}
+      />
+    </>
   );
 };
 
