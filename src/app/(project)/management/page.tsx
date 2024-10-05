@@ -8,6 +8,9 @@ import "leaflet/dist/leaflet.css";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
+import { Box } from "@mui/material";
+import Chatbot from "@/components/Chatbot";
+
 const ManagementPage = () => {
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
 
@@ -57,6 +60,20 @@ const ManagementPage = () => {
           />
         )}
       </MapContainer>
+
+      <Box
+        sx={{
+          width: "40%",
+          height: "100%",
+          overflow: "auto",
+          position: "absolute",
+          right: 0,
+        }}
+      >
+        {/* TODO: 그래프 */}
+      </Box>
+
+      <Chatbot />
     </>
   );
 };
