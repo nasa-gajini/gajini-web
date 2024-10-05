@@ -3,17 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Typography, Button, Stack } from "@mui/material";
+import { Route } from "@/constants/route";
 
+import { Typography, Button, Stack } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
 
 const StatusPage = () => {
   const router = useRouter();
 
-  const [url, setURL] = useState<string>();
+  const [url, setURL] = useState<Route>();
 
   const clickPrev = () => {
-    router.push("/boundary");
+    router.push(Route.Boundary);
   };
 
   const clickNext = () => {
@@ -32,17 +33,17 @@ const StatusPage = () => {
 
       <Stack flex={1} gap={2} alignItems="center" justifyContent="center">
         <Button
-          variant={url === "/recommend" ? "contained" : "outlined"}
+          variant={url === Route.Recommend ? "contained" : "outlined"}
           sx={{ width: "600px" }}
-          onClick={() => setURL("/recommend")}
+          onClick={() => setURL(Route.Recommend)}
         >
           제 농지에 적합한 작물을 추천받고 싶어요
         </Button>
 
         <Button
-          variant={url === "/crop" ? "contained" : "outlined"}
+          variant={url === Route.Crop ? "contained" : "outlined"}
           sx={{ width: "600px" }}
-          onClick={() => setURL("/crop")}
+          onClick={() => setURL(Route.Crop)}
         >
           이미 작물을 심었어요
         </Button>

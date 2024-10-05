@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Select, MenuItem, Typography, Stack } from "@mui/material";
+import { Route } from "@/constants/route";
 
+import { Select, MenuItem, Typography, Stack } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
 
 const CropPage = () => {
@@ -13,10 +14,12 @@ const CropPage = () => {
   const [crop, setCrop] = useState<string>();
 
   const clickPrev = () => {
-    router.push("/status");
+    router.push(Route.Status);
   };
 
-  const clickNext = () => {};
+  const clickNext = () => {
+    router.push(Route.Management);
+  };
 
   return (
     <>
@@ -27,6 +30,7 @@ const CropPage = () => {
       <Stack flex={1} alignItems="center" pt={10}>
         <Select
           value={crop}
+          size="small"
           sx={{ width: "600px" }}
           onChange={(e) => setCrop(e.target.value)}
         >

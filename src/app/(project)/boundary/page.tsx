@@ -9,8 +9,9 @@ import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 
-import { Typography } from "@mui/material";
+import { Route } from "@/constants/route";
 
+import { Typography } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
 
 const egyptBounds = new LatLngBounds([22.0, 25.0], [31.7, 35.0]);
@@ -45,8 +46,12 @@ export default function BoundaryPage() {
     }
   };
 
+  const clickPrev = () => {
+    router.push(Route.Home);
+  };
+
   const clickNext = () => {
-    router.push("/status");
+    router.push(Route.Status);
   };
 
   return (
@@ -94,7 +99,7 @@ export default function BoundaryPage() {
       </MapContainer>
 
       <ArrowButtons
-        prevButtonProps={{ disabled: true }}
+        prevButtonProps={{ onClick: clickPrev }}
         nextButtonProps={{ onClick: clickNext }}
       />
     </>
