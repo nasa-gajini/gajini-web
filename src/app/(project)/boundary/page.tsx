@@ -16,14 +16,13 @@ import ArrowButtons from "@/components/ArrowButtons";
 
 const egyptBounds = new LatLngBounds([22.0, 25.0], [31.7, 35.0]);
 
-export default function BoundaryPage() {
+const BoundaryPage = () => {
   const router = useRouter();
 
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
   const [rectangleLayer, setRectangleLayer] = useState<L.Layer>();
 
   const mapRef = useRef<LeafletMap>(null);
-  const rectangleLayerRef = useRef<L.Layer>();
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -38,6 +37,7 @@ export default function BoundaryPage() {
 
   const clickNext = () => {
     router.push(Route.Status);
+    localStorage.setItem("rectangleLayer", JSON.stringify(rectangleLayer)); // local storage에 설정한 농지 영역 저장
   };
 
   if (!egyptBorder) {
@@ -55,19 +55,15 @@ export default function BoundaryPage() {
     const layer = e.layer;
     const bounds = egyptBorder ? getBoundsFromGeoJSON(egyptBorder) : null;
 
+    // 경계 바깥의 영역이면 제거
     if (bounds && !bounds.contains(layer.getBounds())) {
       mapRef.current?.removeLayer(layer);
       alert("경계 안에서만 도형을 그릴 수 있습니다.");
       return;
     }
 
-    // 이전에 그린 사각형이 있으면 삭제
-    if (rectangleLayerRef.current) {
-      mapRef.current?.removeLayer(rectangleLayerRef.current);
-    }
-
     // 새 사각형을 지도에 추가하고 Ref 업데이트
-    rectangleLayerRef.current = layer;
+    setRectangleLayer(layer);
     mapRef.current?.addLayer(layer);
   };
 
@@ -94,7 +90,7 @@ export default function BoundaryPage() {
 
         <GeoJSON
           data={egyptBorder}
-          style={{ color: "black", weight: 2, fillOpacity: 0 }}
+          style={{ color: "green", weight: 2, fillOpacity: 0 }}
         />
 
         <FeatureGroup>
@@ -105,7 +101,7 @@ export default function BoundaryPage() {
               polyline: false,
               polygon: false,
               circle: false,
-              rectangle: true,
+              rectangle: !rectangleLayer,
               marker: false,
               circlemarker: false,
             }}
@@ -115,8 +111,13 @@ export default function BoundaryPage() {
 
       <ArrowButtons
         prevButtonProps={{ onClick: clickPrev }}
-        nextButtonProps={{ onClick: clickNext }}
+        nextButtonProps={{
+          onClick: clickNext,
+          disabled: !rectangleLayer,
+        }}
       />
     </>
   );
-}
+};
+
+export default BoundaryPage;
