@@ -50,8 +50,9 @@ const BoundaryPage = () => {
       return;
     }
 
-    router.push(Route.Status);
     setRectangleInfo({ rectangleLayer, zoom: mapRef.current!.getZoom() });
+    // router.push(Route.Status);
+    router.push(Route.Management); // TODO: delete
   };
 
   if (!egyptBorder) {
