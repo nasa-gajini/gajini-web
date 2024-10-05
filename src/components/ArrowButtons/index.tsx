@@ -12,7 +12,7 @@ const ArrowButtons = ({
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      p={3}
+      p={2}
     >
       <Button variant="outlined" {...prevButtonProps}>
         Prev

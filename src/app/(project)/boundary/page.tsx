@@ -51,7 +51,7 @@ export default function BoundaryPage() {
 
   return (
     <>
-      <Typography variant="subtitle1" textAlign="center" p={1}>
+      <Typography variant="subtitle1" textAlign="center" p={2}>
         Step 1. 농지 영역을 선택해주세요
       </Typography>
 
