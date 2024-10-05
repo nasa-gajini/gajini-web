@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Route } from "@/constants/route";
+import { CROP_SELECT_OPTIONS } from "@/constants/crop";
 
 import { Select, MenuItem, Typography, Stack } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
@@ -34,15 +35,7 @@ const CropPage = () => {
           sx={{ width: "600px" }}
           onChange={(e) => setCrop(e.target.value)}
         >
-          {[
-            { value: "옥수수", label: "옥수수" },
-            { value: "감자", label: "감자" },
-            { value: "밀", label: "밀" },
-            { value: "쌀", label: "쌀" },
-            { value: "고구마", label: "고구마" },
-            { value: "보리", label: "보리" },
-            { value: "귀리", label: "귀리" },
-          ].map(({ value, label }) => (
+          {CROP_SELECT_OPTIONS.map(({ value, label }) => (
             <MenuItem key={value} value={value}>
               {label}
             </MenuItem>
