@@ -33,11 +33,19 @@ const CropPage = () => {
           value={crop}
           size="small"
           sx={{ width: "600px" }}
+          displayEmpty
+          renderValue={(value) => {
+            if (!value) {
+              return <Typography color="gray">Select crop</Typography>;
+            }
+
+            return value;
+          }}
           onChange={(e) => setCrop(e.target.value)}
         >
-          {CROP_SELECT_OPTIONS.map(({ value, label }) => (
+          {CROP_SELECT_OPTIONS.map((value) => (
             <MenuItem key={value} value={value}>
-              {label}
+              {value}
             </MenuItem>
           ))}
         </Select>
