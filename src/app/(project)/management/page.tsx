@@ -2,15 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import L, {
-  LatLngBounds,
-  Map as LeafletMap,
-  LatLngBoundsExpression,
-} from "leaflet";
-import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
+import { LatLngBounds, Map } from "leaflet";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
+
+import { DEFAULT_ZOOM, DEFAULT_CENTER } from "@/constants/map";
 
 import { Button } from "@mui/material";
 import ImageOverlay from "@/components/ImageOverlay";
@@ -21,7 +19,7 @@ const ManagementPage = () => {
 
   const { rectangleInfo } = useRectangleInfo();
 
-  const mapRef = useRef<LeafletMap>(null);
+  const mapRef = useRef<Map>(null);
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -44,8 +42,8 @@ const ManagementPage = () => {
     <>
       <MapContainer
         ref={mapRef}
-        center={[26.8206, 30.8025]} // 이집트의 중앙 좌표
-        zoom={rectangleInfo?.zoom || 6.2}
+        center={DEFAULT_CENTER} // 이집트의 중앙 좌표
+        zoom={DEFAULT_ZOOM}
         style={{ width: "100%", height: "100%" }}
       >
         <TileLayer

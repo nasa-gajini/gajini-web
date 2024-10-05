@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import L, { LatLngBounds, Map as LeafletMap } from "leaflet";
+import L, { Map } from "leaflet";
 import { MapContainer, FeatureGroup, TileLayer, GeoJSON } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
@@ -12,21 +12,27 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
 import { Route } from "@/constants/route";
+import {
+  EGYPT_BOUNDS,
+  DEFAULT_CENTER,
+  DEFAULT_ZOOM,
+  MAX_ZOOM,
+} from "@/constants/map";
 
 import { Typography } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
-
-const egyptBounds = new LatLngBounds([22.0, 25.0], [31.7, 35.0]);
 
 const BoundaryPage = () => {
   const router = useRouter();
 
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
-  const [rectangleLayer, setRectangleLayer] = useState<L.Rectangle | null>(null);
+  const [rectangleLayer, setRectangleLayer] = useState<L.Rectangle | null>(
+    null,
+  );
 
   const { setRectangleInfo } = useRectangleInfo();
 
-  const mapRef = useRef<LeafletMap>(null);
+  const mapRef = useRef<Map>(null);
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -87,11 +93,11 @@ const BoundaryPage = () => {
 
       <MapContainer
         ref={mapRef}
-        center={[26.8206, 30.8025]} // 이집트의 중앙 좌표
-        zoom={6.2}
-        minZoom={6.2}
-        maxZoom={16}
-        maxBounds={egyptBounds}
+        center={DEFAULT_CENTER}
+        zoom={DEFAULT_ZOOM}
+        minZoom={DEFAULT_ZOOM}
+        maxZoom={MAX_ZOOM}
+        maxBounds={EGYPT_BOUNDS}
         maxBoundsViscosity={1.0}
         style={{ width: "100%", height: "100%" }}
       >
