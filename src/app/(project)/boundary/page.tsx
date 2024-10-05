@@ -10,7 +10,6 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 
 import { Route } from "@/constants/route";
-import { StorageKey } from "@/constants/key";
 
 import { Typography } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
@@ -38,10 +37,6 @@ const BoundaryPage = () => {
 
   const clickNext = () => {
     router.push(Route.Status);
-    localStorage.setItem(
-      StorageKey.RectangleLayer,
-      JSON.stringify(rectangleLayer),
-    ); // local storage에 설정한 농지 영역 저장
   };
 
   if (!egyptBorder) {
@@ -69,6 +64,10 @@ const BoundaryPage = () => {
     // 새 사각형을 지도에 추가하고 Ref 업데이트
     setRectangleLayer(layer);
     mapRef.current?.addLayer(layer);
+  };
+
+  const handleDrawDeleted = () => {
+    setRectangleLayer(undefined);
   };
 
   return (
@@ -101,6 +100,7 @@ const BoundaryPage = () => {
           <EditControl
             position="topright"
             onCreated={handleDrawCreated}
+            onDeleted={handleDrawDeleted}
             draw={{
               polyline: false,
               polygon: false,
