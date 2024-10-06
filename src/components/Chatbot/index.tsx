@@ -2,20 +2,42 @@ import { useState } from "react";
 
 import Lottie from "react-lottie-player";
 
+import usePostQNA, { QNADto } from "@/apis/usePostQNA";
+
+import useRectangleInfo from "@/hooks/useRectangleInfo";
+
 import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
 
 import { Stack, Button, Typography, Box } from "@mui/material";
 import { Close } from "@mui/icons-material";
 
 import lottieJson from "../../../public/assets/json/tomato.json";
+import { convertLatLngBoundsToArray } from "@/utils/map";
 
 const Chatbot = () => {
   const [isChatbotOpened, setChatbotOpened] = useState<boolean>(false);
-  const [help, setHelp] = useState<string>();
+  const [qna, setQNA] = useState<({ question: string } & QNADto) | null>();
+
+  const { ractangleInfo } = useRectangleInfo();
+
+  const { mutate: postQNA } = usePostQNA();
 
   const handleClose = () => {
     setChatbotOpened(false);
-    setHelp("");
+    setQNA(null);
+  };
+
+  const handleQNA = (question: string) => {
+    postQNA(
+      {
+        ...convertLatLngBoundsToArray(
+          ractangleInfo!.rectangleLayer.getBounds(),
+        ),
+        crop_type: 1,
+        query: question,
+      },
+      { onSuccess: (data) => setQNA({ question, answer: data.answer }) },
+    );
   };
 
   return (
@@ -50,7 +72,7 @@ const Chatbot = () => {
             left={0}
           >
             <Typography variant="subtitle2" fontWeight="bold">
-              {help || "How can we help?"}
+              {qna?.question || "How can we help?"}
             </Typography>
 
             <Button
@@ -63,15 +85,15 @@ const Chatbot = () => {
             </Button>
           </Stack>
 
-          {help ? (
-            <>답변</>
+          {qna ? (
+            <Typography>{qna.answer}</Typography>
           ) : (
             <>
               <Button
                 variant="outlined"
                 size="small"
                 sx={{ borderRadius: 2 }}
-                onClick={() => setHelp("Irrigation strategy recommendations")}
+                onClick={() => handleQNA("Irrigation strategy recommendations")}
               >
                 Irrigation strategy recommendations
               </Button>
