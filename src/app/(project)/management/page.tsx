@@ -19,6 +19,8 @@ import "leaflet-defaulticon-compatibility";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
+import usePostPointTable from "@/apis/usePostPointTable";
+
 import { SMAP_RADIO_OPRIONS } from "@/constants/crop";
 import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
 
@@ -35,8 +37,13 @@ import ImageOverlay from "@/components/ImageOverlay";
 const ManagementPage = () => {
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
   const [markerPosition, setMarkerPosition] = useState<LatLng>();
+  const point = !!markerPosition
+    ? [markerPosition.lat, markerPosition.lng]
+    : undefined;
 
   const mapRef = useRef<Map>(null);
+
+  const tableData = usePostPointTable({ point }, !!markerPosition);
 
   const { rectangleInfo } = useRectangleInfo();
 
@@ -68,6 +75,8 @@ const ManagementPage = () => {
     setMarkerPosition(layer.getLatLng());
     // mapRef.current?.addLayer(layer);
   };
+
+  console.log(tableData);
 
   return (
     <>
@@ -131,13 +140,11 @@ const ManagementPage = () => {
           right: 0,
         }}
       >
-        {
-          <Typography whiteSpace="pre-line">
-            {markerPosition
-              ? `Latitude: ${markerPosition?.lat}\nLongitude: ${markerPosition?.lng}`
-              : ""}
-          </Typography>
-        }
+        <Typography whiteSpace="pre-line">
+          {markerPosition
+            ? `Latitude: ${markerPosition?.lat}\nLongitude: ${markerPosition?.lng}`
+            : ""}
+        </Typography>
       </Box>
 
       <RadioGroup
