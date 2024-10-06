@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import L, { Map } from "leaflet";
+import { Map, geoJSON, Rectangle } from "leaflet";
 import { MapContainer, FeatureGroup, TileLayer, GeoJSON } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
@@ -26,9 +26,7 @@ const BoundaryPage = () => {
   const router = useRouter();
 
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
-  const [rectangleLayer, setRectangleLayer] = useState<L.Rectangle | null>(
-    null,
-  );
+  const [rectangleLayer, setRectangleLayer] = useState<Rectangle | null>(null);
 
   const { setRectangleInfo } = useRectangleInfo();
 
@@ -61,7 +59,7 @@ const BoundaryPage = () => {
 
   // GeoJSON 경계를 LatLngBounds로 변환
   const getBoundsFromGeoJSON = (geojson: GeoJSON.FeatureCollection) => {
-    const layer = L.geoJSON(geojson);
+    const layer = geoJSON(geojson);
 
     return layer.getBounds();
   };

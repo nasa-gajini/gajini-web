@@ -142,11 +142,12 @@ const ManagementPage = () => {
           ...COMMON_BOX_SHADOW_SX,
           width: "calc(60% - 100px)",
           bgcolor: "white",
-          px: 1,
+          px: 1.5,
+          py: 0.5,
           borderRadius: 3,
           position: "fixed",
           left: "50px",
-          top: "12px",
+          top: "10px",
           zIndex: 99999,
         }}
       >
@@ -163,9 +164,14 @@ const ManagementPage = () => {
           <FormControlLabel
             key={value}
             value={value}
-            control={<Radio size="small" />}
+            control={
+              <Radio
+                size="small"
+                sx={{ p: 0.5, ".MuiButtonBase-root": { p: 0 } }}
+              />
+            }
             label={value}
-            sx={{ p: 0 }}
+            sx={{ height: 30, p: 0 }}
             slots={{ typography: "small" }}
           />
         ))}
