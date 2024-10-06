@@ -2,17 +2,20 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { LatLng, Map, Marker } from "leaflet";
+import L, { LatLng, Map, Marker } from "leaflet";
 import {
   MapContainer,
   TileLayer,
   GeoJSON,
   Rectangle,
   FeatureGroup,
+  Marker as MarkerIcon,
 } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
+import "leaflet-defaulticon-compatibility";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
@@ -62,7 +65,7 @@ const ManagementPage = () => {
     }
 
     setMarkerPosition(layer.getLatLng());
-    mapRef.current?.addLayer(layer);
+    // mapRef.current?.addLayer(layer);
   };
 
   return (
@@ -92,6 +95,8 @@ const ManagementPage = () => {
             style={{ color: "green", weight: 2, fillOpacity: 0 }}
           />
         )}
+
+        {markerPosition && <MarkerIcon position={markerPosition} />}
 
         <FeatureGroup>
           <EditControl
