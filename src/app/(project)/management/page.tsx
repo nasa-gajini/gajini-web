@@ -64,12 +64,6 @@ const ManagementPage = () => {
   const [smapValue, setSMAPValue] = useState<SMAPValue>(SMAPValue.SoilMoisture);
   const [pointTableData, setPointTableData] = useState<PointTableDto>();
   const [markerPosition, setMarkerPosition] = useState<LatLng>();
-  const [imageOverlay, setImageOverlay] = useState<string>();
-  const point = useMemo(
-    () =>
-      !!markerPosition ? [markerPosition.lat, markerPosition.lng] : undefined,
-    [markerPosition],
-  );
 
   const mapRef = useRef<Map>(null);
 
@@ -83,6 +77,7 @@ const ManagementPage = () => {
     },
     !!rectangleInfo?.rectangleLayer,
   );
+  const { mutate: postPointTable } = usePostPointTable();
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -90,15 +85,6 @@ const ManagementPage = () => {
       .then((data) => setEgyptBorder(data))
       .catch((error) => console.error("Error loading GeoJSON:", error));
   }, []);
-
-  useEffect(() => {
-    try {
-      const response = axios.post("/api/point", { point });
-      setPointTableData(response.data.data);
-    } catch (error: unknown) {
-      console.log(error);
-    }
-  }, [point]);
 
   if (!egyptBorder || !rectangleInfo) {
     return null;
@@ -119,6 +105,12 @@ const ManagementPage = () => {
     }
 
     setMarkerPosition(layer.getLatLng());
+    postPointTable(
+      {
+        point: [layer.getLatLng().lat, layer.getLatLng().lng],
+      },
+      { onSuccess: (data) => setPointTableData(data) },
+    );
   };
 
   return (
@@ -190,11 +182,30 @@ const ManagementPage = () => {
           right: 0,
         }}
       >
-        <Typography whiteSpace="pre-line">
+        <Typography whiteSpace="pre-line" mb={2}>
           {markerPosition
             ? `Latitude: ${markerPosition?.lat}\nLongitude: ${markerPosition?.lng}`
             : ""}
         </Typography>
+
+        {pointTableData &&
+          Object.entries(pointTableData).map(([key, value]) => {
+            return (
+              <>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {key}
+                </Typography>
+
+                {Object.entries(value).map(([innerKey, innerValue]) => {
+                  return (
+                    <>
+                      <Typography variant="body2">{`${innerKey}: ${innerValue}`}</Typography>
+                    </>
+                  );
+                })}
+              </>
+            );
+          })}
       </Box>
 
       <RadioGroup

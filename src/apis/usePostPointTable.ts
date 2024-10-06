@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { useMutation } from "@tanstack/react-query";
+
 const axios = require("axios");
 
 export interface PostPointTableParams {
@@ -22,36 +24,18 @@ export interface PointTableDto {
   };
 }
 
-const usePostPointTable = (
+const postPointTable = async (
   params: PostPointTableParams,
-  enabled: boolean = false,
-): PointTableDto | undefined => {
-  const [tableData, setTableData] = useState<PointTableDto>();
+): Promise<PointTableDto> => {
+  const response = await axios.post("/api/point", params);
 
-  useEffect(() => {
-    if (!enabled) {
-      return;
-    }
+  return response.data;
+};
 
-    const fetchData = async () => {
-      await axios
-        .post("/api/point", params)
-        .then((response: any) => {
-          setTableData(response.data.data);
-        })
-        .catch((error: unknown) => {
-          console.log(error);
-        });
-    };
-
-    fetchData();
-  }, [params, enabled]);
-
-  useEffect(() => {
-    console.log("tableData in hook", tableData);
-  }, [tableData]);
-
-  return tableData;
+const usePostPointTable = () => {
+  return useMutation({
+    mutationFn: (params: PostPointTableParams) => postPointTable(params),
+  });
 };
 
 export default usePostPointTable;
