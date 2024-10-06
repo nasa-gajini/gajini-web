@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Lottie from "react-lottie-player";
 
+import useRectangleInfo from "@/hooks/useRectangleInfo";
+
+import { convertLatLngBoundsToArray } from "@/utils/map";
+
+import { CropType } from "@/constants/crop";
 import { Route } from "@/constants/route";
 
 import { Typography, Stack } from "@mui/material";
@@ -12,10 +17,49 @@ import ArrowButtons from "@/components/ArrowButtons";
 
 import lottieJson from "../../../../public/assets/json/search.json";
 
+const axios = require("axios");
+
+export interface Params {
+  p1: number[];
+  p2: number[];
+}
+
+export interface RecommendDto {
+  crop_type: number;
+  description: string;
+}
+
 const RecommendPage = () => {
   const router = useRouter();
 
-  const [recommendedCrop, setRecommendedCrop] = useState<string>();
+  const [recommendedCrop, setRecommendedCrop] = useState<RecommendDto>();
+
+  const { rectangleInfo } = useRectangleInfo();
+
+  useEffect(() => {
+    if (!rectangleInfo?.rectangleLayer) {
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.post("/api/recommend", {
+          ...convertLatLngBoundsToArray(
+            rectangleInfo.rectangleLayer.getBounds(),
+          ),
+        });
+        setRecommendedCrop(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [rectangleInfo?.rectangleLayer]);
+
+  useEffect(() => {
+    console.log("recommendedCrop", recommendedCrop);
+  }, [recommendedCrop]);
 
   const clickPrev = () => {
     router.push(Route.Status);
@@ -34,15 +78,20 @@ const RecommendPage = () => {
       <Stack flex={1} alignItems="center" justifyContent="center">
         {recommendedCrop ? (
           <>
-            <Typography textAlign="center" whiteSpace="pre-line">
-              {
-                "강수량, 증발산량, 토지 수분함량, 기온 등 5개년, 52종의 데이터를 종합해보았을 때,\n현재 농지와 시기에 가장 적합한 작물은"
-              }
-              <Typography variant="h4" component="span">
-                {`“${recommendedCrop}”`}
-              </Typography>
-              입니다.
+            <Typography variant="h4" component="span">
+              {`“${
+                {
+                  [CropType.Wheat]: "Wheat",
+                  [CropType.Cotton]: "Cotton",
+                  [CropType.Corn]: "Corn",
+                  [CropType.Chickpeas]: "Chickpeas",
+                  [CropType.Barley]: "Barley",
+                  [CropType.DatePalms]: "Date palms",
+                }[recommendedCrop.crop_type]
+              }”`}
             </Typography>
+
+            <Typography>{recommendedCrop.description}</Typography>
           </>
         ) : (
           <>

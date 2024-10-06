@@ -49,8 +49,7 @@ const BoundaryPage = () => {
     }
 
     setRectangleInfo({ rectangleLayer, zoom: mapRef.current!.getZoom() });
-    // router.push(Route.Status);
-    router.push(Route.Management);
+    router.push(Route.Status);
   };
 
   if (!egyptBorder) {

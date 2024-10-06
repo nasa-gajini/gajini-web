@@ -45,7 +45,7 @@ const usePostPointTable = (
     };
 
     fetchData();
-  }, [enabled]);
+  }, [params, enabled]);
 
   useEffect(() => {
     console.log("tableData in hook", tableData);

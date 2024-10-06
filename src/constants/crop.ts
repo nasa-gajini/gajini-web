@@ -1,3 +1,12 @@
+export enum CropType {
+  Wheat,
+  Cotton,
+  Corn,
+  Chickpeas,
+  Barley,
+  DatePalms,
+}
+
 export const CROP_SELECT_OPTIONS: string[] = [
   "Wheat",
   "Rice",
