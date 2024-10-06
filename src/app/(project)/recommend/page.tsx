@@ -3,10 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import Lottie from "react-lottie-player";
+
 import { Route } from "@/constants/route";
 
-import { Typography, Stack, CircularProgress } from "@mui/material";
+import { Typography, Stack } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
+
+import lottieJson from "../../../../public/assets/images/search.json";
 
 const RecommendPage = () => {
   const router = useRouter();
@@ -41,13 +45,18 @@ const RecommendPage = () => {
             </Typography>
           </>
         ) : (
-          <Stack gap={10} alignItems="center">
-            <CircularProgress />
+          <>
+            <Lottie
+              play
+              loop
+              animationData={lottieJson}
+              style={{ width: "500px", height: "500px" }}
+            />
 
             <Typography textAlign="center" whiteSpace="pre-line">
               분석 중입니다. 잠시만 기다려주세요.
             </Typography>
-          </Stack>
+          </>
         )}
       </Stack>
 
