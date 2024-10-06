@@ -1,10 +1,14 @@
 import { Button, ButtonProps, Stack } from "@mui/material";
 
 const ArrowButtons = ({
+  prevText = "PREV",
   prevButtonProps,
+  nextText = "NEXT",
   nextButtonProps,
 }: {
+  prevText?: string;
   prevButtonProps?: ButtonProps;
+  nextText?: string;
   nextButtonProps?: ButtonProps;
 }) => {
   return (
@@ -15,11 +19,11 @@ const ArrowButtons = ({
       p={2}
     >
       <Button variant="outlined" {...prevButtonProps}>
-        Prev
+        {prevText}
       </Button>
 
       <Button variant="contained" {...nextButtonProps}>
-        Next
+        {nextText}
       </Button>
     </Stack>
   );
