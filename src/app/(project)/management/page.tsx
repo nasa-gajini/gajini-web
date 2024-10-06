@@ -19,7 +19,7 @@ import "leaflet-defaulticon-compatibility";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
-import usePostPointTable from "@/apis/usePostPointTable";
+import usePostPointTable, { PointTableDto } from "@/apis/usePostPointTable";
 import usePostOverlayImage from "@/apis/usePostOverlayImage";
 
 import { convertLatLngBoundsToArray } from "@/utils/map";
@@ -36,28 +36,6 @@ import {
 } from "@mui/material";
 import Chatbot from "@/components/Chatbot";
 import ImageOverlay from "@/components/ImageOverlay";
-
-const axios = require("axios");
-
-export interface PostPointTableParams {
-  point?: number[];
-}
-
-export interface PointTableDto {
-  smap: {
-    Soil_Moisture_Retrieval_Data_AM_bulk_density: string;
-    Soil_Moisture_Retrieval_Data_AM_clay_fraction: string;
-    Soil_Moisture_Retrieval_Data_AM_soil_moisture: string;
-    Soil_Moisture_Retrieval_Data_AM_static_water_body_fraction: string;
-    Soil_Moisture_Retrieval_Data_AM_surface_temperature: string;
-    Soil_Moisture_Retrieval_Data_AM_vegetation_opacity: string;
-    Soil_Moisture_Retrieval_Data_AM_vegetation_water_content: string;
-  };
-  modis: {
-    "MODIS_Grid_16Day_VI_CMG/Data Fields/CMG 0.05 Deg 16 days EVI": string;
-    "MODIS_Grid_16Day_VI_CMG/Data Fields/CMG 0.05 Deg 16 days NDVI": string;
-  };
-}
 
 const ManagementPage = () => {
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
@@ -196,13 +174,14 @@ const ManagementPage = () => {
                   {key}
                 </Typography>
 
-                {Object.entries(value).map(([innerKey, innerValue]) => {
-                  return (
-                    <>
-                      <Typography variant="body2">{`${innerKey}: ${innerValue}`}</Typography>
-                    </>
-                  );
-                })}
+                {value &&
+                  Object.entries(value).map(([innerKey, innerValue]) => {
+                    return (
+                      <>
+                        <Typography variant="body2">{`${innerKey}: ${innerValue}`}</Typography>
+                      </>
+                    );
+                  })}
               </>
             );
           })}
