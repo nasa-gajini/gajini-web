@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import L, { LatLng, Map, Marker } from "leaflet";
+import { LatLng, Map, Marker } from "leaflet";
 import {
   MapContainer,
   TileLayer,
@@ -19,6 +19,7 @@ import "leaflet-defaulticon-compatibility";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
+import { SMAP_RADIO_OPRIONS } from "@/constants/crop";
 import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
 
 import {
@@ -84,17 +85,17 @@ const ManagementPage = () => {
           url="https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png"
         />
 
-        <Rectangle
-          bounds={bounds}
-          pathOptions={{ color: "red", weight: 2, fillOpacity: 0 }}
-        />
-
         {egyptBorder && (
           <GeoJSON
             data={egyptBorder}
             style={{ color: "green", weight: 2, fillOpacity: 0 }}
           />
         )}
+
+        <Rectangle
+          bounds={bounds}
+          pathOptions={{ color: "red", weight: 2, fillOpacity: 0 }}
+        />
 
         {markerPosition && <MarkerIcon position={markerPosition} />}
 
@@ -130,11 +131,10 @@ const ManagementPage = () => {
           right: 0,
         }}
       >
-        {/* TODO: 그래프 */}
         {
-          <Typography>
+          <Typography whiteSpace="pre-line">
             {markerPosition
-              ? `위도: ${markerPosition?.lat} 경도: ${markerPosition?.lng}`
+              ? `Latitude: ${markerPosition?.lat}\nLongitude: ${markerPosition?.lng}`
               : ""}
           </Typography>
         }
@@ -156,26 +156,16 @@ const ManagementPage = () => {
           zIndex: 99999,
         }}
       >
-        {[
-          "Soil moisture",
-          "Vegetation water content",
-          "Vegetation Opacity",
-          "Bulk density",
-          "Clay fraction",
-          "Surface temperature",
-          "Static water body fraction",
-          "NDVI(Vegetation Index)",
-        ].map((value) => (
+        {SMAP_RADIO_OPRIONS.map((option) => (
           <FormControlLabel
-            key={value}
-            value={value}
+            key={option.value}
+            {...option}
             control={
               <Radio
                 size="small"
                 sx={{ p: 0.5, ".MuiButtonBase-root": { p: 0 } }}
               />
             }
-            label={value}
             sx={{ height: 30, p: 0 }}
             slots={{ typography: "small" }}
           />

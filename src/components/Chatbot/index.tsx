@@ -11,6 +11,12 @@ import lottieJson from "../../../public/assets/json/tomato.json";
 
 const Chatbot = () => {
   const [isChatbotOpened, setChatbotOpened] = useState<boolean>(false);
+  const [help, setHelp] = useState<string>();
+
+  const handleClose = () => {
+    setChatbotOpened(false);
+    setHelp("");
+  };
 
   return (
     <Stack
@@ -26,34 +32,51 @@ const Chatbot = () => {
           gap={1}
           bgcolor="white"
           p={2}
-          pt={1}
+          pt={6}
           borderRadius={4}
+          position="relative"
           sx={{ ...COMMON_BOX_SHADOW_SX, overflowY: "auto" }}
         >
           <Stack
+            width={390}
             direction="row"
             alignItems="center"
             justifyContent="space-between"
+            bgcolor="white"
+            px={2}
+            py={1}
+            position="absolute"
+            top={0}
+            left={0}
           >
-            <Typography variant="subtitle2">무엇을 도와드릴까요?</Typography>
+            <Typography variant="subtitle2" fontWeight="bold">
+              {help || "How can we help?"}
+            </Typography>
 
             <Button
               size="small"
               color="inherit"
               sx={{ minWidth: 0, p: 0 }}
-              onClick={() => setChatbotOpened(false)}
+              onClick={handleClose}
             >
               <Close />
             </Button>
           </Stack>
 
-          <Button variant="outlined" size="small" sx={{ borderRadius: 2 }}>
-            그래프 해석
-          </Button>
-
-          <Button variant="outlined" size="small" sx={{ borderRadius: 2 }}>
-            관개 전략 추천
-          </Button>
+          {help ? (
+            <>답변</>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ borderRadius: 2 }}
+                onClick={() => setHelp("Irrigation strategy recommendations")}
+              >
+                Irrigation strategy recommendations
+              </Button>
+            </>
+          )}
         </Stack>
       )}
 
