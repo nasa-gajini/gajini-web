@@ -2,18 +2,27 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { Map } from "leaflet";
-import { MapContainer, TileLayer, GeoJSON, Rectangle } from "react-leaflet";
+import { LatLng, Map, Marker } from "leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  GeoJSON,
+  Rectangle,
+  FeatureGroup,
+} from "react-leaflet";
+import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Chatbot from "@/components/Chatbot";
 import ImageOverlay from "@/components/ImageOverlay";
 
 const ManagementPage = () => {
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
+  const [markerPosition, setMarkerPosition] = useState<LatLng>();
 
   const mapRef = useRef<Map>(null);
 
@@ -25,6 +34,14 @@ const ManagementPage = () => {
       .then((data) => setEgyptBorder(data))
       .catch((error) => console.error("Error loading GeoJSON:", error));
   }, []);
+
+  // 마커 생성 핸들러
+  const handleMarkerCreated = (e: any): void => {
+    const layer = e.layer as Marker;
+
+    setMarkerPosition(layer.getLatLng());
+    mapRef.current?.addLayer(layer);
+  };
 
   if (!egyptBorder || !rectangleInfo) {
     return <Chatbot />;
@@ -61,19 +78,46 @@ const ManagementPage = () => {
           />
         )}
 
-        {/* {imageTest && <ImageOverlay imageUrl={imageTest} bounds={bounds} />} */}
+        <FeatureGroup>
+          <EditControl
+            position="topright"
+            onCreated={handleMarkerCreated}
+            draw={{
+              polyline: false,
+              polygon: false,
+              circle: false,
+              rectangle: false,
+              marker: true,
+              circlemarker: false,
+            }}
+            edit={{
+              edit: false,
+              remove: false,
+            }}
+          />
+        </FeatureGroup>
       </MapContainer>
 
       <Box
+        p={1}
         sx={{
           width: "40%",
           height: "100%",
+          borderLeft: 1,
+          borderColor: "divider",
           overflow: "auto",
           position: "absolute",
           right: 0,
         }}
       >
         {/* TODO: 그래프 */}
+        {
+          <Typography>
+            {markerPosition
+              ? `위도: ${markerPosition?.lat} 경도: ${markerPosition?.lng}`
+              : ""}
+          </Typography>
+        }
       </Box>
 
       <Chatbot />
