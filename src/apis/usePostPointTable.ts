@@ -36,7 +36,7 @@ const usePostPointTable = (
     const fetchData = async () => {
       await axios
         .post("/api/point", params)
-        .then((response) => {
+        .then((response: any) => {
           setTableData(response.data.data);
         })
         .catch((error: unknown) => {
@@ -46,6 +46,10 @@ const usePostPointTable = (
 
     fetchData();
   }, [enabled]);
+
+  useEffect(() => {
+    console.log("tableData in hook", tableData);
+  }, [tableData]);
 
   return tableData;
 };

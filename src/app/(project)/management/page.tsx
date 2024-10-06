@@ -20,8 +20,9 @@ import "leaflet-defaulticon-compatibility";
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
 import usePostPointTable from "@/apis/usePostPointTable";
+import usePostOverlayImage from "@/apis/usePostOverlayImage";
 
-import { SMAP_RADIO_OPRIONS } from "@/constants/crop";
+import { SMAP_RADIO_OPRIONS, SMAPValue } from "@/constants/crop";
 import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
 
 import {
@@ -33,9 +34,11 @@ import {
 } from "@mui/material";
 import Chatbot from "@/components/Chatbot";
 import ImageOverlay from "@/components/ImageOverlay";
+import { convertLatLngBoundsToArray } from "@/utils/map";
 
 const ManagementPage = () => {
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
+  const [smapValue, setSMAPValue] = useState<SMAPValue>(SMAPValue.SoilMoisture);
   const [markerPosition, setMarkerPosition] = useState<LatLng>();
   const point = !!markerPosition
     ? [markerPosition.lat, markerPosition.lng]
@@ -43,9 +46,14 @@ const ManagementPage = () => {
 
   const mapRef = useRef<Map>(null);
 
-  const tableData = usePostPointTable({ point }, !!markerPosition);
-
   const { rectangleInfo } = useRectangleInfo();
+
+  const imageOverlay = usePostOverlayImage({
+    data_field: smapValue,
+    is_range: false,
+    ...convertLatLngBoundsToArray(rectangleInfo!.rectangleLayer.getBounds()),
+  });
+  const tableData = usePostPointTable({ point }, !!markerPosition);
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -76,8 +84,6 @@ const ManagementPage = () => {
     // mapRef.current?.addLayer(layer);
   };
 
-  console.log(tableData);
-
   return (
     <>
       <MapContainer
@@ -99,6 +105,10 @@ const ManagementPage = () => {
             data={egyptBorder}
             style={{ color: "green", weight: 2, fillOpacity: 0 }}
           />
+        )}
+
+        {imageOverlay && (
+          <ImageOverlay imageUrl={imageOverlay} bounds={bounds} />
         )}
 
         <Rectangle
@@ -149,7 +159,8 @@ const ManagementPage = () => {
 
       <RadioGroup
         row
-        defaultValue="Soil moisture"
+        value={smapValue}
+        onChange={(e) => setSMAPValue(e.target.value as SMAPValue)}
         sx={{
           ...COMMON_BOX_SHADOW_SX,
           width: "calc(60% - 100px)",
