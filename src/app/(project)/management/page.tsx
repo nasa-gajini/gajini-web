@@ -35,20 +35,27 @@ const ManagementPage = () => {
       .catch((error) => console.error("Error loading GeoJSON:", error));
   }, []);
 
-  // 마커 생성 핸들러
-  const handleMarkerCreated = (e: any): void => {
-    const layer = e.layer as Marker;
-
-    setMarkerPosition(layer.getLatLng());
-    mapRef.current?.addLayer(layer);
-  };
-
   if (!egyptBorder || !rectangleInfo) {
     return <Chatbot />;
   }
 
   const { rectangleLayer, zoom } = rectangleInfo;
   const bounds = rectangleLayer.getBounds();
+
+  // 마커 생성 핸들러
+  const handleMarkerCreated = (e: any): void => {
+    const layer = e.layer as Marker;
+
+    // 경계 바깥의 마커면 제거
+    if (bounds && !bounds.contains(layer.getLatLng())) {
+      mapRef.current?.removeLayer(layer);
+      alert("경계 안에서만 마커를 생성할 수 있습니다.");
+      return;
+    }
+
+    setMarkerPosition(layer.getLatLng());
+    mapRef.current?.addLayer(layer);
+  };
 
   return (
     <>
