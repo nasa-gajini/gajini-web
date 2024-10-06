@@ -21,7 +21,7 @@ const RecommendPage = () => {
   return (
     <>
       <Typography variant="subtitle1" textAlign="center" p={2}>
-        Step 3. 적합한 작물을 추천해주세요
+        Step 3. Recommend crops for my farmland situation
       </Typography>
 
       <Stack flex={1} alignItems="center" justifyContent="center">

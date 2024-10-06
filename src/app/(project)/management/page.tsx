@@ -47,12 +47,10 @@ const ManagementPage = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png"
         />
-
         <Rectangle
           bounds={bounds}
           pathOptions={{ color: "red", fillOpacity: 0 }}
         />
-
         {egyptBorder && (
           <GeoJSON
             data={egyptBorder}

@@ -25,7 +25,7 @@ const CropPage = () => {
   return (
     <>
       <Typography variant="subtitle1" textAlign="center" p={2}>
-        Step 3. 어떤 작물을 심으셨나요?
+        Step 3. What crops have you planted?
       </Typography>
 
       <Stack flex={1} alignItems="center" pt={10}>

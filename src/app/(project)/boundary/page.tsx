@@ -19,12 +19,13 @@ import {
   MAX_ZOOM,
 } from "@/constants/map";
 
-import { Typography } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
 
 const BoundaryPage = () => {
   const router = useRouter();
 
+  const [visible, setVisible] = useState<boolean>(true);
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
   const [rectangleLayer, setRectangleLayer] = useState<L.Rectangle | null>(
     null,
@@ -52,7 +53,6 @@ const BoundaryPage = () => {
 
     setRectangleInfo({ rectangleLayer, zoom: mapRef.current!.getZoom() });
     router.push(Route.Status);
-    // router.push(Route.Management); // TODO: delete
   };
 
   if (!egyptBorder) {
@@ -89,7 +89,7 @@ const BoundaryPage = () => {
   return (
     <>
       <Typography variant="subtitle1" textAlign="center" p={2}>
-        Step 1. 농지 영역을 선택해주세요
+        Step 1. Select a farmland area
       </Typography>
 
       <MapContainer
@@ -136,6 +136,14 @@ const BoundaryPage = () => {
           disabled: !rectangleLayer,
         }}
       />
+
+      <Button
+        variant="contained"
+        sx={{ position: "fixed", top: 10, right: 10 }}
+        onClick={() => setVisible((prev) => !prev)}
+      >
+        toggle
+      </Button>
     </>
   );
 };

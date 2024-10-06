@@ -28,7 +28,7 @@ const StatusPage = () => {
   return (
     <>
       <Typography variant="subtitle1" textAlign="center" p={2}>
-        Step 2. 현재 상태를 알려주세요
+        Step 2. Tell us about the current state of your farmland
       </Typography>
 
       <Stack flex={1} gap={2} alignItems="center" justifyContent="center">
