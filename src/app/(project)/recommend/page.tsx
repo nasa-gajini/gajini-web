@@ -10,7 +10,7 @@ import { Route } from "@/constants/route";
 import { Typography, Stack } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
 
-import lottieJson from "../../../../public/assets/images/search.json";
+import lottieJson from "../../../../public/assets/json/search.json";
 
 const RecommendPage = () => {
   const router = useRouter();
@@ -54,7 +54,7 @@ const RecommendPage = () => {
             />
 
             <Typography textAlign="center" whiteSpace="pre-line">
-              분석 중입니다. 잠시만 기다려주세요.
+              We're analyzing. Please be patient.
             </Typography>
           </>
         )}

@@ -26,7 +26,7 @@ const ManagementPage = () => {
   }, []);
 
   if (!egyptBorder || !rectangleInfo) {
-    return null;
+    return <Chatbot />;
   }
 
   const { rectangleLayer, zoom } = rectangleInfo;

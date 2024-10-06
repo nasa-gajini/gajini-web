@@ -1,9 +1,13 @@
 import { useState } from "react";
 
+import Lottie from "react-lottie-player";
+
 import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
 
-import { Stack, Button, Typography } from "@mui/material";
-import { WaterDrop, Close } from "@mui/icons-material";
+import { Stack, Button, Typography, Box } from "@mui/material";
+import { Close } from "@mui/icons-material";
+
+import lottieJson from "../../../public/assets/json/tomato.json";
 
 const Chatbot = () => {
   const [isChatbotOpened, setChatbotOpened] = useState<boolean>(false);
@@ -20,6 +24,7 @@ const Chatbot = () => {
           width={390}
           maxHeight={690}
           gap={1}
+          bgcolor="white"
           p={2}
           pt={1}
           borderRadius={4}
@@ -53,16 +58,29 @@ const Chatbot = () => {
       )}
 
       <Button
-        variant="contained"
         sx={{
           ...COMMON_BOX_SHADOW_SX,
           width: 64,
           height: 64,
+          p: 0,
+          alignItems: "center",
+          justifyContent: "center",
           borderRadius: 4,
+          overflow: "hidden",
         }}
         onClick={() => setChatbotOpened((prev) => !prev)}
       >
-        <WaterDrop fontSize="large" />
+        <Box width={140} height={140} position="absolute">
+          <Lottie
+            play
+            loop
+            animationData={lottieJson}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        </Box>
       </Button>
     </Stack>
   );
