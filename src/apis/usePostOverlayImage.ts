@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const axios = require("axios");
 
@@ -9,25 +9,18 @@ export interface Params {
   p2: number[];
 }
 
-const usePostOverlayImage = (params: Params): string | undefined => {
-  const [decodedImage, setDecodedImage] = useState<string>();
+const postOverlayImage = async (params: Params): Promise<{ data: string }> => {
+  const response = await axios.post("/api/img", params);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await axios
-        .post("/api/image", params)
-        .then((response: any) => {
-          setDecodedImage(`data:image/png;base64,${response.data.data}`);
-        })
-        .catch((error: unknown) => {
-          console.log(error);
-        });
-    };
+  return response.data;
+};
 
-    fetchData();
-  }, []);
-
-  return decodedImage;
+const usePostOverlayImage = (params: Params, enabled: boolean) => {
+  return useQuery({
+    queryKey: ["overlayImage", params],
+    queryFn: () => postOverlayImage(params),
+    enabled,
+  });
 };
 
 export default usePostOverlayImage;

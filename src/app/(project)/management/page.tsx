@@ -64,6 +64,7 @@ const ManagementPage = () => {
   const [smapValue, setSMAPValue] = useState<SMAPValue>(SMAPValue.SoilMoisture);
   const [pointTableData, setPointTableData] = useState<PointTableDto>();
   const [markerPosition, setMarkerPosition] = useState<LatLng>();
+  const [imageOverlay, setImageOverlay] = useState<string>();
   const point = useMemo(
     () =>
       !!markerPosition ? [markerPosition.lat, markerPosition.lng] : undefined,
@@ -74,11 +75,14 @@ const ManagementPage = () => {
 
   const { rectangleInfo } = useRectangleInfo();
 
-  const imageOverlay = usePostOverlayImage({
-    data_field: smapValue,
-    is_range: false,
-    ...convertLatLngBoundsToArray(rectangleInfo!.rectangleLayer.getBounds()),
-  });
+  const { data: imageOverlayData } = usePostOverlayImage(
+    {
+      data_field: smapValue,
+      is_range: false,
+      ...convertLatLngBoundsToArray(rectangleInfo!.rectangleLayer.getBounds()),
+    },
+    !!rectangleInfo?.rectangleLayer,
+  );
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -140,8 +144,11 @@ const ManagementPage = () => {
           />
         )}
 
-        {imageOverlay && (
-          <ImageOverlay imageUrl={imageOverlay} bounds={bounds} />
+        {imageOverlayData && (
+          <ImageOverlay
+            imageUrl={`data:image/png;base64,${imageOverlayData.data}`}
+            bounds={bounds}
+          />
         )}
 
         <Rectangle
