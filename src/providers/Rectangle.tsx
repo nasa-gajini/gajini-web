@@ -2,7 +2,7 @@ import { createContext, useState, ReactNode } from "react";
 
 import L from "leaflet";
 
-interface RectangleInfoType {
+export interface RectangleInfoType {
   rectangleLayer: L.Rectangle;
   zoom: number;
 }

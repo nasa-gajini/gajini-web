@@ -4,21 +4,20 @@ import Lottie from "react-lottie-player";
 
 import usePostQNA, { QNADto } from "@/apis/usePostQNA";
 
-import useRectangleInfo from "@/hooks/useRectangleInfo";
+import { convertLatLngBoundsToArray } from "@/utils/map";
 
 import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
+
+import { RectangleInfoType } from "@/providers/Rectangle";
 
 import { Stack, Button, Typography, Box } from "@mui/material";
 import { Close } from "@mui/icons-material";
 
 import lottieJson from "../../../public/assets/json/tomato.json";
-import { convertLatLngBoundsToArray } from "@/utils/map";
 
-const Chatbot = () => {
+const Chatbot = ({ rectangleInfo }: { rectangleInfo: RectangleInfoType }) => {
   const [isChatbotOpened, setChatbotOpened] = useState<boolean>(false);
   const [qna, setQNA] = useState<({ question: string } & QNADto) | null>();
-
-  const { ractangleInfo } = useRectangleInfo();
 
   const { mutate: postQNA } = usePostQNA();
 
@@ -31,7 +30,7 @@ const Chatbot = () => {
     postQNA(
       {
         ...convertLatLngBoundsToArray(
-          ractangleInfo!.rectangleLayer.getBounds(),
+          rectangleInfo!.rectangleLayer.getBounds(),
         ),
         crop_type: 1,
         query: question,

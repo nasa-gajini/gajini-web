@@ -220,7 +220,7 @@ const ManagementPage = () => {
         ))}
       </RadioGroup>
 
-      <Chatbot />
+      <Chatbot rectangleInfo={rectangleInfo} />
     </>
   );
 };
