@@ -37,7 +37,7 @@ const StatusPage = () => {
           sx={{ width: "600px" }}
           onClick={() => setURL(Route.Recommend)}
         >
-          제 농지에 적합한 작물을 추천받고 싶어요
+          I want recommendations for the right crops for my farmland
         </Button>
 
         <Button
@@ -45,7 +45,7 @@ const StatusPage = () => {
           sx={{ width: "600px" }}
           onClick={() => setURL(Route.Crop)}
         >
-          이미 작물을 심었어요
+          I've already planted crops
         </Button>
       </Stack>
 

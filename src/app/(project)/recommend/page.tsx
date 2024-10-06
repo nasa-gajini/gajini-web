@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Lottie from "react-lottie-player";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
+
+import usePostRecommend from "@/apis/usePostRecommend";
 
 import { convertLatLngBoundsToArray } from "@/utils/map";
 
@@ -17,41 +18,17 @@ import ArrowButtons from "@/components/ArrowButtons";
 
 import lottieJson from "../../../../public/assets/json/search.json";
 
-const axios = require("axios");
-
-export interface Params {
-  p1: number[];
-  p2: number[];
-}
-
-export interface RecommendDto {
-  crop_type: number;
-  description: string;
-}
-
 const RecommendPage = () => {
   const router = useRouter();
 
-  const [recommendedCrop, setRecommendedCrop] = useState<RecommendDto>();
-
   const { rectangleInfo } = useRectangleInfo();
 
-  useEffect(() => {
-    try {
-      const response = axios.post("/api/recommend", {
-        ...convertLatLngBoundsToArray(
-          rectangleInfo!.rectangleLayer.getBounds(),
-        ),
-      });
-      setRecommendedCrop(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [rectangleInfo?.rectangleLayer, convertLatLngBoundsToArray]);
-
-  useEffect(() => {
-    console.log("recommendedCrop", recommendedCrop);
-  }, [recommendedCrop]);
+  const { data: recommend } = usePostRecommend(
+    {
+      ...convertLatLngBoundsToArray(rectangleInfo!.rectangleLayer.getBounds()),
+    },
+    !!rectangleInfo?.rectangleLayer,
+  );
 
   const clickPrev = () => {
     router.push(Route.Status);
@@ -61,6 +38,16 @@ const RecommendPage = () => {
     router.push(Route.Management);
   };
 
+  const getCropName = () =>
+    ({
+      [CropType.Wheat]: "Wheat",
+      [CropType.Cotton]: "Cotton",
+      [CropType.Corn]: "Corn",
+      [CropType.Chickpeas]: "Chickpeas",
+      [CropType.Barley]: "Barley",
+      [CropType.DatePalms]: "Date palms",
+    }[recommend?.crop_type || CropType.Wheat]);
+
   return (
     <>
       <Typography variant="subtitle1" textAlign="center" p={2}>
@@ -68,22 +55,13 @@ const RecommendPage = () => {
       </Typography>
 
       <Stack flex={1} alignItems="center" justifyContent="center">
-        {recommendedCrop ? (
+        {recommend ? (
           <>
             <Typography variant="h4" component="span">
-              {`“${
-                {
-                  [CropType.Wheat]: "Wheat",
-                  [CropType.Cotton]: "Cotton",
-                  [CropType.Corn]: "Corn",
-                  [CropType.Chickpeas]: "Chickpeas",
-                  [CropType.Barley]: "Barley",
-                  [CropType.DatePalms]: "Date palms",
-                }[recommendedCrop.crop_type]
-              }”`}
+              {`“${getCropName()}”`}
             </Typography>
 
-            <Typography>{recommendedCrop.description}</Typography>
+            <Typography>{recommend.description}</Typography>
           </>
         ) : (
           <>
@@ -103,8 +81,8 @@ const RecommendPage = () => {
 
       <ArrowButtons
         prevButtonProps={{ onClick: clickPrev }}
-        nextText={recommendedCrop ? `SELECT ${recommendedCrop}` : "SELECT"}
-        nextButtonProps={{ onClick: clickNext, disabled: !recommendedCrop }}
+        nextText={recommend ? `SELECT ${getCropName()}` : "SELECT"}
+        nextButtonProps={{ onClick: clickNext, disabled: !recommend }}
       />
     </>
   );
