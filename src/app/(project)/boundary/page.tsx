@@ -19,13 +19,12 @@ import {
   MAX_ZOOM,
 } from "@/constants/map";
 
-import { Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
 import ArrowButtons from "@/components/ArrowButtons";
 
 const BoundaryPage = () => {
   const router = useRouter();
 
-  const [visible, setVisible] = useState<boolean>(true);
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
   const [rectangleLayer, setRectangleLayer] = useState<L.Rectangle | null>(
     null,
@@ -52,7 +51,8 @@ const BoundaryPage = () => {
     }
 
     setRectangleInfo({ rectangleLayer, zoom: mapRef.current!.getZoom() });
-    router.push(Route.Status);
+    // router.push(Route.Status);
+    router.push(Route.Management);
   };
 
   if (!egyptBorder) {
@@ -136,14 +136,6 @@ const BoundaryPage = () => {
           disabled: !rectangleLayer,
         }}
       />
-
-      <Button
-        variant="contained"
-        sx={{ position: "fixed", top: 10, right: 10 }}
-        onClick={() => setVisible((prev) => !prev)}
-      >
-        toggle
-      </Button>
     </>
   );
 };

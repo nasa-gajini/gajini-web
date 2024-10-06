@@ -10,6 +10,7 @@ import useRectangleInfo from "@/hooks/useRectangleInfo";
 
 import { Box } from "@mui/material";
 import Chatbot from "@/components/Chatbot";
+import ImageOverlay from "@/components/ImageOverlay";
 
 const ManagementPage = () => {
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
@@ -59,6 +60,8 @@ const ManagementPage = () => {
             style={{ color: "green", weight: 2, fillOpacity: 0 }}
           />
         )}
+
+        {/* {imageTest && <ImageOverlay imageUrl={imageTest} bounds={bounds} />} */}
       </MapContainer>
 
       <Box
