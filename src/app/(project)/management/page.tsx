@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 import { LatLng, Map, Marker } from "leaflet";
 import {
@@ -22,6 +22,8 @@ import useRectangleInfo from "@/hooks/useRectangleInfo";
 import usePostPointTable from "@/apis/usePostPointTable";
 import usePostOverlayImage from "@/apis/usePostOverlayImage";
 
+import { convertLatLngBoundsToArray } from "@/utils/map";
+
 import { SMAP_RADIO_OPRIONS, SMAPValue } from "@/constants/crop";
 import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
 
@@ -34,15 +36,39 @@ import {
 } from "@mui/material";
 import Chatbot from "@/components/Chatbot";
 import ImageOverlay from "@/components/ImageOverlay";
-import { convertLatLngBoundsToArray } from "@/utils/map";
+
+const axios = require("axios");
+
+export interface PostPointTableParams {
+  point?: number[];
+}
+
+export interface PointTableDto {
+  smap: {
+    Soil_Moisture_Retrieval_Data_AM_bulk_density: string;
+    Soil_Moisture_Retrieval_Data_AM_clay_fraction: string;
+    Soil_Moisture_Retrieval_Data_AM_soil_moisture: string;
+    Soil_Moisture_Retrieval_Data_AM_static_water_body_fraction: string;
+    Soil_Moisture_Retrieval_Data_AM_surface_temperature: string;
+    Soil_Moisture_Retrieval_Data_AM_vegetation_opacity: string;
+    Soil_Moisture_Retrieval_Data_AM_vegetation_water_content: string;
+  };
+  modis: {
+    "MODIS_Grid_16Day_VI_CMG/Data Fields/CMG 0.05 Deg 16 days EVI": string;
+    "MODIS_Grid_16Day_VI_CMG/Data Fields/CMG 0.05 Deg 16 days NDVI": string;
+  };
+}
 
 const ManagementPage = () => {
   const [egyptBorder, setEgyptBorder] = useState<GeoJSON.FeatureCollection>();
   const [smapValue, setSMAPValue] = useState<SMAPValue>(SMAPValue.SoilMoisture);
+  const [pointTableData, setPointTableData] = useState<PointTableDto>();
   const [markerPosition, setMarkerPosition] = useState<LatLng>();
-  const point = !!markerPosition
-    ? [markerPosition.lat, markerPosition.lng]
-    : undefined;
+  const point = useMemo(
+    () =>
+      !!markerPosition ? [markerPosition.lat, markerPosition.lng] : undefined,
+    [markerPosition],
+  );
 
   const mapRef = useRef<Map>(null);
 
@@ -53,7 +79,6 @@ const ManagementPage = () => {
     is_range: false,
     ...convertLatLngBoundsToArray(rectangleInfo!.rectangleLayer.getBounds()),
   });
-  const tableData = usePostPointTable({ point }, !!markerPosition);
 
   useEffect(() => {
     fetch("/assets/geojson/geoBoundaries-EGY-ADM0.geojson") // public/assets 경로의 GeoJSON 파일
@@ -61,6 +86,15 @@ const ManagementPage = () => {
       .then((data) => setEgyptBorder(data))
       .catch((error) => console.error("Error loading GeoJSON:", error));
   }, []);
+
+  useEffect(() => {
+    try {
+      const response = axios.post("/api/point", { point });
+      setPointTableData(response.data.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  }, [point]);
 
   if (!egyptBorder || !rectangleInfo) {
     return null;
@@ -81,7 +115,6 @@ const ManagementPage = () => {
     }
 
     setMarkerPosition(layer.getLatLng());
-    // mapRef.current?.addLayer(layer);
   };
 
   return (

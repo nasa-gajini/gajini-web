@@ -37,25 +37,17 @@ const RecommendPage = () => {
   const { rectangleInfo } = useRectangleInfo();
 
   useEffect(() => {
-    if (!rectangleInfo?.rectangleLayer) {
-      return;
+    try {
+      const response = axios.post("/api/recommend", {
+        ...convertLatLngBoundsToArray(
+          rectangleInfo!.rectangleLayer.getBounds(),
+        ),
+      });
+      setRecommendedCrop(response.data.data);
+    } catch (error) {
+      console.log(error);
     }
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.post("/api/recommend", {
-          ...convertLatLngBoundsToArray(
-            rectangleInfo.rectangleLayer.getBounds(),
-          ),
-        });
-        setRecommendedCrop(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [rectangleInfo?.rectangleLayer]);
+  }, [rectangleInfo?.rectangleLayer, convertLatLngBoundsToArray]);
 
   useEffect(() => {
     console.log("recommendedCrop", recommendedCrop);
