@@ -16,7 +16,15 @@ import "leaflet-draw/dist/leaflet.draw.css";
 
 import useRectangleInfo from "@/hooks/useRectangleInfo";
 
-import { Box, Typography } from "@mui/material";
+import { COMMON_BOX_SHADOW_SX } from "@/components/Chatbot/constants";
+
+import {
+  Box,
+  Typography,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from "@mui/material";
 import Chatbot from "@/components/Chatbot";
 import ImageOverlay from "@/components/ImageOverlay";
 
@@ -126,6 +134,42 @@ const ManagementPage = () => {
           </Typography>
         }
       </Box>
+
+      <RadioGroup
+        row
+        defaultValue="Soil moisture"
+        sx={{
+          ...COMMON_BOX_SHADOW_SX,
+          width: "calc(60% - 100px)",
+          bgcolor: "white",
+          px: 1,
+          borderRadius: 3,
+          position: "fixed",
+          left: "50px",
+          top: "12px",
+          zIndex: 99999,
+        }}
+      >
+        {[
+          "Soil moisture",
+          "Vegetation water content",
+          "Vegetation Opacity",
+          "Bulk density",
+          "Clay fraction",
+          "Surface temperature",
+          "Static water body fraction",
+          "NDVI(Vegetation Index)",
+        ].map((value) => (
+          <FormControlLabel
+            key={value}
+            value={value}
+            control={<Radio size="small" />}
+            label={value}
+            sx={{ p: 0 }}
+            slots={{ typography: "small" }}
+          />
+        ))}
+      </RadioGroup>
 
       <Chatbot />
     </>
