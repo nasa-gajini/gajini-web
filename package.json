@@ -14,6 +14,7 @@
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
     "@mui/x-charts": "^7.19.0",
+    "@tanstack/react-query": "^5.59.0",
     "axios": "^1.7.7",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "next": "14.2.14",
